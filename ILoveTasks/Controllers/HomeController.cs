@@ -52,34 +52,10 @@ namespace ILoveTasks.Controllers
         }
 
         [HttpPost]
-        public IActionResult TaskSecond(string StringS)
+        public IActionResult TaskSecond(string sentence)
         {
-            char[] StringNotSArr = StringS.ToCharArray();
-        n:
-            for (int i = 0; i < StringNotSArr.Length; i++)
-            {
-                if (StringNotSArr[i] == 'с' || StringNotSArr[i] == 'С')
-                {
-                    StringNotSArr[i] = '_';
-                    for (int j = i + 1; j < StringNotSArr.Length; j++)
-                    {
-                        StringNotSArr[j - 1] = StringNotSArr[j];
-                    }
-                    StringNotSArr[StringNotSArr.Length - 1] = '_';
-                }
-            }
-            for (int i = 0; i < StringNotSArr.Length; i++)
-            {
-                if (StringNotSArr[i] == 'с' || StringNotSArr[i] == 'С')
-                { 
-                    goto n;
-                }
-                else
-                {
-                    continue;
-                }
-            }
-            ViewBag.StringNotS = new string(StringNotSArr);
+            string modifiedSentence = sentence.Replace(' ', '_');
+            ViewBag.modifiedSentence = $"{modifiedSentence}";
             return View();
         }
 
