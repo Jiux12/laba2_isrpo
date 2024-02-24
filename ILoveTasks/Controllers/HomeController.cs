@@ -1,14 +1,21 @@
 ﻿using ILoveTasks.Models;
+using System.Linq;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Diagnostics.Metrics;
+using static ILoveTasks.Controllers.HomeController;
 
 namespace ILoveTasks.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+
+        public class MatrixViewModel
+        {
+            public int[,] Matrix { get; set; }
+        }
 
         public HomeController(ILogger<HomeController> logger)
         {
@@ -37,7 +44,30 @@ namespace ILoveTasks.Controllers
 
         public IActionResult TaskThird()
         {
-            return View();
+            int[,] matrix = new int[,] { { 5, 34, 7, 2, 9 }, { 4, 21, 7, 2, 9 }, { 43, 5, 2, 9, 3 }, { 5, 34, 7, 2, 9 }, { 3, 5, 2, 9, 3 } };
+
+            MatrixViewModel model = new MatrixViewModel
+            {
+                Matrix = matrix
+            };
+
+            List<int> flatMatrix = new List<int>();
+
+            for (int i = 0; i < matrix.GetLength(0); i++)
+            {
+                for (int j = 0; j < matrix.GetLength(1); j++)
+                {
+                    flatMatrix.Add(matrix[i, j]);
+                }
+            }
+
+            List<int> minElements = flatMatrix.OrderBy(x => x).Take(5).ToList();
+
+            int sum = minElements.Sum();
+            double average = (double)sum / 5;
+            ViewBag.average = $"{average}";
+
+            return View(model);
         }
 
         [HttpPost]
@@ -56,41 +86,6 @@ namespace ILoveTasks.Controllers
         {
             string modifiedSentence = sentence.Replace(' ', '_');
             ViewBag.modifiedSentence = $"{modifiedSentence}";
-            return View();
-        }
-
-        [HttpPost]
-        public IActionResult TaskThird(string InputMass)
-        {
-            string[] mass2n = InputMass.Split(' ');
-            int sum1 = 0, sum2 = 0;
-            if(mass2n.Length % 2 == 0)
-            { 
-                for (int i = 0; i < mass2n.Length; i++)
-                {
-                    if (int.TryParse(mass2n[i], out var number1)) 
-                    {
-                        if (i % 2 == 0)
-                        {
-                            sum1 += Convert.ToInt32(mass2n[i]) * Convert.ToInt32(mass2n[i]);
-                            sum2 += Convert.ToInt32(mass2n[i]) * Convert.ToInt32(mass2n[i]) * Convert.ToInt32(mass2n[i]);
-                        }
-                    }
-                    else
-                    {
-                        ViewBag.sum1 = "Введите верный массив";
-                        ViewBag.sum2 = "";
-                        return View();
-                    }
-                }
-                ViewBag.sum1 = $"Сумма квадратов: {sum1}";
-                ViewBag.sum2 = $"Сумма кубов: {sum2}";
-            }
-            else
-            {
-                ViewBag.sum1 = "Массив нечетный";
-                ViewBag.sum2 = "";
-            }
             return View();
         }
 

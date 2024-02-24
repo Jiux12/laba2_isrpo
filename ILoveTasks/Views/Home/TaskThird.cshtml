@@ -1,13 +1,19 @@
 ﻿<div>
 	<form method="post">
-		<p>
-			<label>Введите численный массив через пробел:</label>
-			<input type="text" name="InputMass" />
+        <p>
+            <label>Среднее арифметическое 5 минимальных значений массива: </label>
+            <label>@ViewBag.average</label>
 		</p>
-		<p>
-			<input type="submit" value="Вывести" /> 
-			<label>@ViewBag.sum1</label>
-			<label>@ViewBag.sum2</label>
-		</p>
+		<table border="1">
+            @for (int i = 0; i < Model.Matrix.GetLength(0); i++)
+            {
+                <tr>
+                    @for (int j = 0; j < Model.Matrix.GetLength(1); j++)
+                    {
+                        <td><pre>@Model.Matrix[i, j]    </pre></td>
+                    }
+                </tr>
+            }
+        </table>
 	</form>
 </div>
